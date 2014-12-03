@@ -45,7 +45,7 @@ public class CenterDisplay extends CaptionPanel {
 			currentIndex = deckPanel.getWidgetIndex(homePage);
 		}
 		else if(INDEX_OF_PAGE == DRIVEPAGE_INDEX) {
-			this.setCaptionText(CenterDisplay.DRIVEPAGE_TITLE + "/root");
+			this.setCaptionText(CenterDisplay.DRIVEPAGE_TITLE + " /root");
 			currentIndex = deckPanel.getWidgetIndex(drivePage);
 		}
 		else if(INDEX_OF_PAGE == EDITPAGE_INDEX) {

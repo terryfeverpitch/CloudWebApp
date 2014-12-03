@@ -7,6 +7,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable
@@ -16,7 +17,7 @@ public class File {
 	
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	Key primary_key;
+	private Long file_id;
 	@Persistent
 	private File parent;
 	@Persistent
@@ -29,4 +30,6 @@ public class File {
 	private int fileSize;
 	@Persistent
 	private String uploadTime;
+	@Persistent
+	private BlobKey blobKey;
 }
