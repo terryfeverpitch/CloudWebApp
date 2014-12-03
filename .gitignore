@@ -1,0 +1,7 @@
+.*
+gwt-unitCache
+war/WEB-INF
+war/cloudwebapp
+src/META-INF
+src/*.gwt.xml
+src/.properties
