@@ -3,5 +3,5 @@ gwt-unitCache
 war/WEB-INF
 war/cloudwebapp
 src/META-INF
-src/CloudWebApp.gwt.xml
+src/com/CloudWebApp.gwt.xml
 src/.properties
