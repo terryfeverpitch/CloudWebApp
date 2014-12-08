@@ -1,9 +1,14 @@
 package com.cloudwebapp.client.clouddrive;
 
+import com.cloudwebapp.client.service.GetUploadUrlClient;
+import com.cloudwebapp.client.service.GetUploadUrlClientAsync;
+import com.cloudwebapp.client.ui.MainWindow;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -16,20 +21,37 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class UploadFilePanel extends FormPanel {
+	private String uploadServletUrl = "/cloudwebapp/uploadServlet";
 	private String uploadUrl;
-	
 	private FlexTable flexTable;
 	private FileUpload fileUpload;
 	private FileUpload fileUpload_1;
 	private FileUpload fileUpload_2;
 	private FileUpload fileUpload_3;
 	private Button btnOK;
-	private Hidden hdnPurchaseRequestId;
-	private Hidden hdnAttachmentType;
+	private Hidden hdnAuthor; 
+//	private Hidden hdnPurchaseRequestId;
+//	private Hidden hdnAttachmentType;
 	private Label lblMessage;	
 	private Button btnClose;
 	
+	public static GetUploadUrlClientAsync getUploadUrlClient = GWT.create(GetUploadUrlClient.class);
+	
 	public UploadFilePanel() {
+		
+		getUploadUrlClient.getUploadUrl(uploadServletUrl, new AsyncCallback<String>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("on failure");
+				uploadUrl = null;
+			}
+			@Override
+			public void onSuccess(String result) {
+				Window.alert(result);
+				uploadUrl = result;
+			}
+		});
+		
 		VerticalPanel vPanel= new VerticalPanel();
 		this.setWidget(vPanel);
 		
@@ -73,11 +95,13 @@ public class UploadFilePanel extends FormPanel {
 		flexTable.setWidget(3, 1, fileUpload_3);
 		fileUpload_3.setWidth("286px");
 		
-		hdnPurchaseRequestId = new Hidden("purchaseRequestId");
-		vPanel.add(hdnPurchaseRequestId);
+		hdnAuthor = new Hidden("Author");
+		vPanel.add(hdnAuthor);
+//		hdnPurchaseRequestId = new Hidden("purchaseRequestId");
+//		vPanel.add(hdnPurchaseRequestId);
 		
-		this.hdnAttachmentType= new Hidden("attachmentType");
-		vPanel.add(hdnAttachmentType);
+//		this.hdnAttachmentType= new Hidden("attachmentType");
+//		vPanel.add(hdnAttachmentType);
 		
 		lblMessage = new Label("");
 		vPanel.add(lblMessage);
@@ -104,8 +128,9 @@ public class UploadFilePanel extends FormPanel {
 						UploadFilePanel.this.reset();	
 					} else {
 //						UploadFilePanel.this.hide();
-						Window.alert("current network is unable to connect to cloud server. \n"
-								+ "Please check your network.");
+						Window.alert(uploadUrl + " / 11 /");
+//						Window.alert("current network is unable to connect to cloud server. \n"
+//								+ "Please check your network.");
 					}
 				}
 			}

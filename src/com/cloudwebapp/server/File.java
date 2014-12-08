@@ -17,7 +17,9 @@ public class File {
 	
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	private Long file_id;
+	private Long blobKey;
+	@Persistent
+	private String author;
 	@Persistent
 	private File parent;
 	@Persistent
@@ -30,6 +32,18 @@ public class File {
 	private int fileSize;
 	@Persistent
 	private String uploadTime;
-	@Persistent
-	private BlobKey blobKey;
+
+	public File(String fileName) {
+		this.fileName = fileName;
+		
+	}
+	
+	public File(String author, String fileName) {
+		this.author = author;
+		this.fileName = fileName;
+	}
+	
+	public void setAuthor(String author) {
+		this.author = author;
+	}
 }

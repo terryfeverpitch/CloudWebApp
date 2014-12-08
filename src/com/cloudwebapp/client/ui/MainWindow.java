@@ -167,33 +167,6 @@ public class MainWindow extends VerticalPanel {
 					public void onSuccess(ArrayList<AccountDTO> result) {
 						centerDisplay.buildDataStoreViewer(result);
 						centerDisplay.changeTo(CenterDisplay.DATASTOREVIEWER_INDEX);
-						
-//						row = null;
-//						DatastoreRow[] rows = new DatastoreRow[result.size() + 1];
-//						if(dataStorePage != null) {
-//							dataStorePage.removeFromParent();
-//							dataStorePage = null;
-//						}
-//						buildDataStorePage(result.size() + 1);
-//						int i = 0;
-//						for(AccountDTO ac : result) {
-//							rows[i] = new DatastoreRow(ac);
-//							i++;
-//							if(ac.getType() == Account.ACCOUNT_TYPE_USER) {
-//								dataStorePage.setWidget(i, 0, rows[i - 1].btn_delete);
-//								dataStorePage.setWidget(i, 1, rows[i - 1].btn_block);
-//							}
-//							dataStorePage.setWidget(i, 2, rows[i - 1].username);
-//							dataStorePage.setWidget(i, 3, rows[i - 1].password);
-//							dataStorePage.setWidget(i, 4, rows[i - 1].name);
-//							dataStorePage.setWidget(i, 5, rows[i - 1].address);
-//							dataStorePage.setWidget(i, 6, rows[i - 1].birthdate);
-//							dataStorePage.setWidget(i, 7, rows[i - 1].email);
-//							dataStorePage.setWidget(i, 8, rows[i - 1].type);
-//							dataStorePage.setWidget(i, 9, rows[i - 1].signUpDate);
-//						}
-//						cptnpnlMain.setCaptionText("Datastore");
-//						deckPanel.showWidget(3);
 					}
 				});
 			}
