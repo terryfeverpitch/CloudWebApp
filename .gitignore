@@ -1,6 +1,6 @@
 .*
 gwt-unitCache
-war/WEB-INF
+war/WEB-INF/*
 war/cloudwebapp
 src/META-INF
 src/com/cloudwebapp/*.gwt.xml
