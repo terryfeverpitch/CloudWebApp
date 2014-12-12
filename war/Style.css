@@ -17,7 +17,7 @@
 	width:100%;
 	height:100%;
 	border: 1px solid black;
-	font-family: consolas;
+	font-family: consolas, ubuntu;
 	font-size: 16pt
 }
 .gwt-button:hover {
@@ -58,7 +58,7 @@
 	width: 100%;
 	height: 100%;
 	border: 1px solid black;
-	font-family: consolas;
+	font-family: consolas, ubuntu;
 	font-size: 16pt
 }
 .datastore-button:hover {
@@ -76,13 +76,13 @@
 }
 .gwt-loginPage-input { 
 	border: black 2px solid;
-	font-family: consolas bold;
+	font-family: consolas bold, ubuntu bold;
 	font-size: 14pt
 }
 
 .gwt-loginPage-button { 
 	border: 1px solid black;
-	font-family: consolas;
+	font-family: consolas, ubuntu;
 	font-size: 16pt
 }
 
@@ -95,13 +95,13 @@
 }
 
 .gwt-loginPage-label { 
-	font-family: consolas;
+	font-family: consolas, ubuntu;
 	font-size: 18pt
 }
 /*signup page*/
 .gwt-signupPage-label { 
 	width: 10%;
-	font-family: consolas;
+	font-family: consolas, ubuntu;
 	font-size: 18pt
 }
 
@@ -109,7 +109,7 @@
 	color: #FFFFFF;
 	background-color: #a8a8a8;
 	width: 100%;
-	font-family: consolas;
+	font-family: consolas, ubuntu;
 	font-weight: bold;
 	font-size: 14pt
 }
@@ -117,13 +117,13 @@
 .gwt-signupPage-input { 
 	width:99%;
 	border: black 1px solid;
-	font-family:consolas bold;
+	font-family:consolas bold, ubuntu bold;
 	font-size:14pt
 }
 /*drive page*/
 .gwt-drivePage-title {
 	border: black 1px solid;
-	font-family:consolas bold;
+	font-family:consolas bold, ubuntu bold;
 	font-size:14pt;
 	background-color: #ffffff;
 }

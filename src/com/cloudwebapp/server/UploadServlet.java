@@ -1,12 +1,10 @@
 package com.cloudwebapp.server;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +17,6 @@ import com.google.appengine.api.blobstore.BlobInfoFactory;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
-import com.google.gwt.user.client.Window;
 
 public class UploadServlet extends HttpServlet {
 	/**
@@ -31,34 +28,47 @@ public class UploadServlet extends HttpServlet {
 	
 	public void doPost(HttpServletRequest req, HttpServletResponse res)
 			throws ServletException, IOException {
-		PersistenceManager pm= PMF.get().getPersistenceManager();
-//		Long purchaseRequestId= Long.parseLong(req.getParameter("purchaseRequestId"));
-//		AttachmentType aType = AttachmentType.valueOf(req.getParameter("attachmentType"));
-//		PurchaseRequest pr = pm.getObjectById(PurchaseRequest.class, purchaseRequestId);		
-		
+		PersistenceManager pm = PMF.get().getPersistenceManager();	
+
 		Map<String, List<BlobKey>> blobMap = blobstoreService.getUploads(req);
-		BlobKey blobKey = null;
-		BlobInfo blobInfo;
-		
+				
 		for (List<BlobKey> list: blobMap.values()){
 			if (list.isEmpty()) continue;			
-			blobKey= list.get(0);
-			blobInfo= this.blobInfoFactory.loadBlobInfo(blobKey);
-			
+			BlobKey blobKey = list.get(0);
+			BlobInfo blobInfo = this.blobInfoFactory.loadBlobInfo(blobKey);
+			System.out.println("File with blobkey " + blobKey.getKeyString() + " was saved in blobstore.");
 			if (blobInfo.getFilename() == null || blobInfo.getFilename().trim().isEmpty()){
 				this.blobstoreService.delete(blobKey);
 				continue;
 			}
-			// String username = req.getParameter("Author");
+			String username = req.getParameter("Author");
+			Long parent = Long.parseLong(req.getParameter("Parent"));
+			String filename = blobInfo.getFilename();
+			long fileSize = blobInfo.getSize();
+//			Long parent = MainWindow.getLoginAccount().getRootId();
+			System.out.println("parent = " + req.getParameter("Parent"));
+			File file = new File(username, filename, fileSize, parent, blobKey);
+			file.getParentKey();
+			pm.makePersistent(file);
 			
-//			File file = new File(username, "tst", 100, parent, blobKey);
-//			pm.makePersistent(file);
-//			Window.alert("make persistent");
+			/*
+			 * public File(String author, String fileName, long fileSize, Long parent, BlobKey blobKey) {
+		this.blobKey = blobKey.getKeyString();
+		this.author = author;
+		this.parent = parent;
+//		this.child = null;
+		this.type = File.FILE;
+		this.fileName = fileName;
+		this.fileSize = fileSize;
+	}*/
 		}	
-		String username = MainWindow.getLoginAccount().getName();
-		Long parent = MainWindow.getLoginAccount().getRootId();
-		File file = new File(username, "tst", 100, parent, blobKey);
-		pm.makePersistent(file);
+		
 		pm.close();		
 	}
+	
+	@Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//        resp.setHeader("Content-Type", "text/plain");
+//        resp.getWriter().write(blobstore.createUploadUrl("/uploadfinished"));
+    }
 }

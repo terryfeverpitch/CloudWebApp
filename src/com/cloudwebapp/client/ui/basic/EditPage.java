@@ -90,37 +90,6 @@ public class EditPage extends Grid implements ClickHandler {
             }
         }
 		editPage_btn_edit.addClickHandler(this);
-//		editPage_btn_edit.addClickHandler(new ClickHandler() {
-//			@Override
-//			public void onClick(ClickEvent event) {
-//				AccountDTO account = MainWindow.getLoginAccount();
-//				if(account.getType() == Account.ACCOUNT_TYPE_ADMIN) {
-//					String pw = Window.prompt("ADMIN PASSWORD : ", "");
-//					if(!account.getPassword().equals(pw))
-//						return;
-//				}
-//				String[] restore = signPage.getRestoreValue();
-//				
-//				signPage = new SignupPage(SignupPage.EDIT_MODE, account.getUsername(), account.getPassword());
-//				signPage.tb_people_name.setText(restore[2] = account.getName());
-//				signPage.tb_people_address.setText(restore[3] = account.getAddress());
-//				signPage.db_people_birthDate.getTextBox().setText(restore[4] = account.getBirthDate());
-//				signPage.tb_mail.setText(restore[5] = account.getEmail());
-//				signPage.btn_add.addClickHandler(EditPage.this);
-//				signPage.btn_back.addClickHandler(EditPage.this);
-//				signPage.btn_restore.addClickHandler(EditPage.this);
-//				if(account.getType() == Account.ACCOUNT_TYPE_ADMIN) {
-//					signPage.tb_people_name.setEnabled(false);
-//					signPage.tb_people_address.setEnabled(false);
-//					signPage.db_people_birthDate.setEnabled(false);
-//					signPage.tb_mail.setEnabled(false);
-//				}
-//				dialog = new DialogBox();
-//				dialog.setWidget(signPage);
-//				dialog.center();
-//				dialog.show();
-//			}
-//		});
 	}
 	
 	public void setAccountInfo(AccountDTO account) {
@@ -209,7 +178,6 @@ public class EditPage extends Grid implements ClickHandler {
 		}
 		
 	}
-	
 	
 	public void closeDialogBox() {
 		dialog.remove(signPage);

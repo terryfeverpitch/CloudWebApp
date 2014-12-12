@@ -3,6 +3,7 @@ package com.cloudwebapp.client.clouddrive;
 import com.cloudwebapp.client.service.GetUploadUrlClient;
 import com.cloudwebapp.client.service.GetUploadUrlClientAsync;
 import com.cloudwebapp.client.ui.MainWindow;
+import com.cloudwebapp.shared.AccountDTO;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -32,14 +33,15 @@ public class UploadFilePanel extends FormPanel {
 //	private FileUpload fileUpload_3;
 	private Button btnOK;
 	private Hidden hdnAuthor; 
+	private Hidden hdnParent;
 //	private Hidden hdnPurchaseRequestId;
 //	private Hidden hdnAttachmentType;
 	private Label lblMessage;	
-	private Button btnClose;
+	private Button btnClear;
 	
 	public static GetUploadUrlClientAsync getUploadUrlClient = GWT.create(GetUploadUrlClient.class);
 	
-	public UploadFilePanel() {		
+	public UploadFilePanel() {	
 		VerticalPanel vPanel= new VerticalPanel();
 		this.setWidget(vPanel);
 		
@@ -89,8 +91,17 @@ public class UploadFilePanel extends FormPanel {
 //		fileUpload_3.setWidth("286px");
 		
 		hdnAuthor = new Hidden("Author");
-		hdnAuthor.setValue(MainWindow.getLoginAccount().getName());
+		hdnAuthor.setValue(MainWindow.getLoginAccount().getUsername());
 		vPanel.add(hdnAuthor);
+		
+		hdnParent = new Hidden("Parent");
+		hdnParent.setValue(MainWindow.getLoginAccount().getRootId().toString());
+		vPanel.add(hdnParent);
+		
+//		hdnAuthor = new Hidden("ParentId");
+//		hdnAuthor.setValue(account.getName());
+//		vPanel.add(hdnAuthor);
+		
 //		hdnPurchaseRequestId = new Hidden("purchaseRequestId");
 //		vPanel.add(hdnPurchaseRequestId);
 		
@@ -127,7 +138,6 @@ public class UploadFilePanel extends FormPanel {
 						UploadFilePanel.this.reset();	
 					} else {
 //						UploadFilePanel.this.hide();
-						Window.alert(uploadUrl + " / 11 /");
 //						Window.alert("current network is unable to connect to cloud server. \n"
 //								+ "Please check your network.");
 					}
@@ -139,18 +149,17 @@ public class UploadFilePanel extends FormPanel {
 		horizontalPanel.setCellVerticalAlignment(btnOK, HasVerticalAlignment.ALIGN_BOTTOM);
 		horizontalPanel.setCellHorizontalAlignment(btnOK, HasHorizontalAlignment.ALIGN_CENTER);
 		
-		btnClose = new Button("New button");
-		btnClose.addClickHandler(new ClickHandler() {
+		btnClear = new Button("New button");
+		btnClear.addClickHandler(new ClickHandler() {
 			
 			public void onClick(ClickEvent event) {
 //				hide();
 			}
 			
 		});
-		btnClose.setText("close");
-		horizontalPanel.add(btnClose);
-		horizontalPanel.setCellVerticalAlignment(btnClose, HasVerticalAlignment.ALIGN_BOTTOM);
-		horizontalPanel.setCellHorizontalAlignment(btnClose, HasHorizontalAlignment.ALIGN_CENTER);
+		horizontalPanel.add(btnClear);
+		horizontalPanel.setCellVerticalAlignment(btnClear, HasVerticalAlignment.ALIGN_BOTTOM);
+		horizontalPanel.setCellHorizontalAlignment(btnClear, HasHorizontalAlignment.ALIGN_CENTER);
 						
 		this.setEncoding(FormPanel.ENCODING_MULTIPART);
 	    this.setMethod(FormPanel.METHOD_POST);
@@ -172,7 +181,6 @@ public class UploadFilePanel extends FormPanel {
 			}
 		});
 	}
-	
 	
 	public void triggerFileUpload() {
 		

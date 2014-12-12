@@ -1,6 +1,7 @@
 package com.cloudwebapp.client.ui.basic;
 
 import com.cloudwebapp.client.clouddrive.UploadFilePanel;
+import com.cloudwebapp.shared.AccountDTO;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -11,8 +12,8 @@ public class DrivePage extends FlexTable {
 	private static UploadFilePanel uploadFilePanel;
 	
 	public DrivePage() {
-		uploadFilePanel = new UploadFilePanel();
-		setWidget(0, 0, uploadFilePanel);
+//		uploadFilePanel = new UploadFilePanel();
+//		setWidget(0, 0, uploadFilePanel);
 		
 		/*Label lblNewLabel = new Label("");
 		lblNewLabel.setStyleName("gwt-drivePage-title");
@@ -34,5 +35,10 @@ public class DrivePage extends FlexTable {
 		Label lblNewLabel_3 = new Label("Update Time");
 		setWidget(1, 2, lblNewLabel_3);
 		getFlexCellFormatter().setColSpan(0, 0, 4);
+	}
+	
+	public void getFileSystem() {
+		uploadFilePanel = new UploadFilePanel();
+		setWidget(0, 0, uploadFilePanel);
 	}
 }

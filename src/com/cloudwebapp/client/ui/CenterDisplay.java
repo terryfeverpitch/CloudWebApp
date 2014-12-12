@@ -37,6 +37,17 @@ public class CenterDisplay extends CaptionPanel {
 		this.add(deckPanel);
 	}
 	
+	private void buildDeckPanel() {
+		deckPanel = new DeckPanel();
+		deckPanel.setStyleName("deckPanel");
+		deckPanel.add(homePage = new HomePage());
+		deckPanel.add(editPage = new EditPage());
+		deckPanel.add(drivePage = new DrivePage());
+		
+		this.setCaptionText(HOMEPAGE_TITLE);
+		deckPanel.showWidget(HOMEPAGE_INDEX);
+	}	
+	
 	public void changeTo(int INDEX_OF_PAGE) {
 		int currentIndex = 0;
 		
@@ -55,15 +66,10 @@ public class CenterDisplay extends CaptionPanel {
 		else if(INDEX_OF_PAGE == DATASTOREVIEWER_INDEX) {
 			this.setCaptionText(CenterDisplay.DATASTOREVIEWER_TITLE);
 			currentIndex = deckPanel.getWidgetIndex(datastoreViewerPage);
-//			datastoreViewerPage = new DatastoreViewerPage(1, 1);
 		}
 			
 		deckPanel.showWidget(currentIndex);
 	}
-	
-//	public void buildAdminContents() {
-//		datastoreViewerPage = new DatastoreViewerPage(1, 1);
-//	}
 	
 	public void buildDataStoreViewer(ArrayList<AccountDTO> in) {
 		datastoreViewerPage = new DatastoreViewerPage(in.size() + 1, 10, in);
@@ -74,25 +80,7 @@ public class CenterDisplay extends CaptionPanel {
 		return editPage;
 	}
 	
-	private void buildDeckPanel() {
-		deckPanel = new DeckPanel();
-		deckPanel.setStyleName("deckPanel");
-		deckPanel.add(homePage = new HomePage());
-		deckPanel.add(editPage = new EditPage());
-		deckPanel.add(drivePage = new DrivePage());
-		
-		this.setCaptionText(HOMEPAGE_TITLE);
-		deckPanel.showWidget(HOMEPAGE_INDEX);
-		
-		//		cptnpnlMain = new CaptionPanel();
-//		deckPanel = new DeckPanel();
-		
-//		cptnpnlMain.setStyleName("panel");
-//		deckPanel.setStyleName("deckPanel");
-		
-//		cptnpnlMain.add(deckPanel);
-		
-//		cptnpnlMain.setCaptionText("Home");
-//		changeTo(HOMEPAGE);
-	}	
+	public DrivePage getDrivePage() {
+		return drivePage;
+	}
 }
