@@ -4,33 +4,16 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.cloudwebapp.client.CloudWebApp;
-import com.cloudwebapp.client.ui.HomePage.mClickHandler;
-import com.cloudwebapp.client.ui.admin.DatastoreViewerPage;
-import com.cloudwebapp.client.ui.admin.DatastoreViewerPage.DatastoreRow;
-import com.cloudwebapp.client.ui.basic.HomePage;
-import com.cloudwebapp.client.ui.basic.EditPage;
 import com.cloudwebapp.server.Account;
 import com.cloudwebapp.shared.AccountDTO;
-import com.cloudwebapp.shared.FieldVerifier;
-import com.cloudwebapp.shared.MessageCode;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CaptionPanel;
-import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.MenuItemSeparator;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 public class MainWindow extends VerticalPanel {
 	// data, objects, variables
@@ -55,13 +38,22 @@ public class MainWindow extends VerticalPanel {
 		
 	}
 	
-	public MainWindow(String username, int type) {
+	public MainWindow(String username) {
 		this.setSize("100%", "100%");
-		buildMenuBar(username);
-		buildBasicDisplay();
-		if(type == Account.ACCOUNT_TYPE_ADMIN)
-			buildAdminDisplay();
-//			admin_interface();
+		
+		CloudWebApp.accountService.getAccount(username, new AsyncCallback<AccountDTO>() {
+			@Override
+			public void onFailure(Throwable caught) {						
+			}
+			@Override
+			public void onSuccess(AccountDTO result) {
+				account = result;
+				buildMenuBar(account.getUsername());
+				buildBasicDisplay();
+				if(account.getType() == Account.ACCOUNT_TYPE_ADMIN)
+					buildAdminDisplay();
+			}
+		});
 	}
 	
 	private void buildBasicDisplay() {

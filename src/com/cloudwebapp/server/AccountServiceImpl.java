@@ -41,19 +41,25 @@ public class AccountServiceImpl extends RemoteServiceServlet implements AccountS
 	@Override
 	public int register(String username, String password, String sd, String n, String a, String d, String e) 
 			throws IllegalArgumentException {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Account newAccount;
+		File root = new File(username, "root", null);
 		if(username.equals("admin")) {
+			// String author, String fileName, Long parent
 			newAccount = new Account(username, username);
 		}
 		else {
 			 newAccount = new Account(username, password, sd, n, a, d, e);
 		}
-		PersistenceManager pm = PMF.get().getPersistenceManager();
+		
 		try {
 			Query query = pm.newQuery("SELECT FROM " + Account.class.getName() + " WHERE username == " + "'" + username + "'");
 			List<Account> result =  (List<Account>)query.execute();
 			
 			if(result.isEmpty()) {
+				File rt = pm.makePersistent(root);
+				newAccount.setRootId(rt.getId());
+				
 				pm.makePersistent(newAccount);
 				pm.close();
 				return MessageCode.REGISTER_SUCCESS;
@@ -65,7 +71,7 @@ public class AccountServiceImpl extends RemoteServiceServlet implements AccountS
 		} catch(Exception exception) {
 			pm.close();
 			return MessageCode.REGISTER_FAILURE_EXCEPTION_ERROR;
-		}		
+		}
 	}
 	
 	@Override
@@ -158,6 +164,7 @@ public class AccountServiceImpl extends RemoteServiceServlet implements AccountS
 				AccountDTO ac = new AccountDTO();
 				ac.setValue(get.getUsername(), get.getPassword(), get.getSignUpDate(),
 							get.getName(), get.getAddress(), get.getBirthDate(), get.getEmail(), get.getType(), get.isAvailable());
+				ac.setRootId(get.getRootId());
 				return ac;
 			}
 		} catch(Exception exception) {

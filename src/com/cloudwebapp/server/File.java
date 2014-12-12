@@ -1,14 +1,11 @@
 package com.cloudwebapp.server;
 
-import java.util.ArrayList;
-
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import com.google.appengine.api.blobstore.BlobKey;
-import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable
 public class File {
@@ -17,33 +14,50 @@ public class File {
 	
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	private Long blobKey;
+	private Long id;
+	@Persistent
+	private String blobKey;
 	@Persistent
 	private String author;
 	@Persistent
-	private File parent;
-	@Persistent
-	private ArrayList<File> child;
+	private Long parent;
+//	@Persistent
+//	private ArrayList<Long> child;
 	@Persistent
 	private int type;
 	@Persistent
 	private String fileName;
 	@Persistent
-	private int fileSize;
-	@Persistent
-	private String uploadTime;
+	private long fileSize;
 
-	public File(String fileName) {
-		this.fileName = fileName;
-		
+	public File() {
 	}
 	
-	public File(String author, String fileName) {
+	public File(String author, String fileName, Long parent) {
+		this.blobKey = null;
 		this.author = author;
+		this.parent = parent;
+//		this.child = new ArrayList<Long>();
+		this.type = File.DIR;
 		this.fileName = fileName;
+		this.fileSize = 0;
 	}
 	
-	public void setAuthor(String author) {
+	public File(String author, String fileName, long fileSize, Long parent, BlobKey blobKey) {
+		this.blobKey = blobKey.getKeyString();
 		this.author = author;
+		this.parent = parent;
+//		this.child = null;
+		this.type = File.FILE;
+		this.fileName = fileName;
+		this.fileSize = fileSize;
+	}
+	
+	public Long getId() {
+		return this.id;
+	}
+	
+	public Long getParentKey() {
+		return this.parent;
 	}
 }

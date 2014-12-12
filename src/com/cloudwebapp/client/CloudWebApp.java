@@ -2,7 +2,6 @@ package com.cloudwebapp.client;
 
 import java.util.Date;
 
-import com.cloudwebapp.client.ui.HomePage;
 import com.cloudwebapp.client.ui.LoginPage;
 import com.cloudwebapp.client.ui.MainWindow;
 import com.cloudwebapp.client.ui.SignupPage;
@@ -90,7 +89,7 @@ public class CloudWebApp implements EntryPoint {
 							Window.alert("Welcome");
 							dialog.hide();
 							dialog = null;
-							mainWindow = new MainWindow(loginPage.tb_username.getText(), result);
+							mainWindow = new MainWindow(loginPage.tb_username.getText());
 //							mainWindow.build(loginPage.tb_username.getText());
 							RootPanel.get("mainView").add(mainWindow);
 						}
@@ -98,7 +97,7 @@ public class CloudWebApp implements EntryPoint {
 							Window.alert("Welcome back, Admin.");
 							dialog.hide();
 							dialog = null;
-							mainWindow = new MainWindow(loginPage.tb_username.getText(), result);
+							mainWindow = new MainWindow(loginPage.tb_username.getText());
 //							mainWindow.build(loginPage.tb_username.getText());
 							RootPanel.get("mainView").add(mainWindow);
 						}

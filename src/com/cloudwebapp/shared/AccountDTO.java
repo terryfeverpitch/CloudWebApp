@@ -16,6 +16,7 @@ public class AccountDTO implements Serializable {
     private String email;
     private int type;
     private boolean available;
+    private Long rootId;
  
 	// Constructor
 	public AccountDTO() {
@@ -86,6 +87,10 @@ public class AccountDTO implements Serializable {
         this.email = email;
     }
 	
+	public void setRootId(Long id) {
+		this.rootId = id;
+	}
+	
 	public String getUsername() {
         return username;
     }
@@ -116,5 +121,9 @@ public class AccountDTO implements Serializable {
 	
 	public int getType() {
 		return type;
+	}
+	
+	public Long getRootId() {
+		return rootId;
 	}
 }

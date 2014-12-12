@@ -29,6 +29,8 @@ public class Account {
     private String email;
     @Persistent
     private boolean available;
+    @Persistent
+    private Long rootId;
 	
 	// Constructor
 	public Account() {
@@ -85,6 +87,10 @@ public class Account {
 		birthDate = d;
 		email = e;
     }
+	
+	public void setRootId(Long id) {
+		this.rootId = id;
+	}
 	
 	public void updateValue(String un, String pw, String n, String a, String d, String e) {
 		username = un;
@@ -154,4 +160,8 @@ public class Account {
 	public String getEmail() {
         return email;
     }
+	
+	public Long getRootId() {
+		return this.rootId;
+	}
 }

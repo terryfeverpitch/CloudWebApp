@@ -5,6 +5,8 @@ import com.cloudwebapp.client.service.GetUploadUrlClientAsync;
 import com.cloudwebapp.client.ui.MainWindow;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ButtonElement;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -25,9 +27,9 @@ public class UploadFilePanel extends FormPanel {
 	private String uploadUrl;
 	private FlexTable flexTable;
 	private FileUpload fileUpload;
-	private FileUpload fileUpload_1;
-	private FileUpload fileUpload_2;
-	private FileUpload fileUpload_3;
+//	private FileUpload fileUpload_1;
+//	private FileUpload fileUpload_2;
+//	private FileUpload fileUpload_3;
 	private Button btnOK;
 	private Hidden hdnAuthor; 
 //	private Hidden hdnPurchaseRequestId;
@@ -37,21 +39,7 @@ public class UploadFilePanel extends FormPanel {
 	
 	public static GetUploadUrlClientAsync getUploadUrlClient = GWT.create(GetUploadUrlClient.class);
 	
-	public UploadFilePanel() {
-		
-		getUploadUrlClient.getUploadUrl(uploadServletUrl, new AsyncCallback<String>() {
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("on failure");
-				uploadUrl = null;
-			}
-			@Override
-			public void onSuccess(String result) {
-				Window.alert(result);
-				uploadUrl = result;
-			}
-		});
-		
+	public UploadFilePanel() {		
 		VerticalPanel vPanel= new VerticalPanel();
 		this.setWidget(vPanel);
 		
@@ -59,7 +47,7 @@ public class UploadFilePanel extends FormPanel {
 		vPanel.add(flexTable);
 		flexTable.setSize("333px", "100%");
 		
-		Label lblNewLabel = new Label("File 01");
+		Label lblNewLabel = new Label("File");
 		lblNewLabel.setWordWrap(false);
 		flexTable.setWidget(0, 0, lblNewLabel);
 		
@@ -68,34 +56,40 @@ public class UploadFilePanel extends FormPanel {
 		flexTable.setWidget(0, 1, fileUpload);
 		fileUpload.setWidth("284px");
 		
-		Label lblNewLabel_2 = new Label("File 02");
-		lblNewLabel_2.setWordWrap(false);
-		flexTable.setWidget(1, 0, lblNewLabel_2);
+		fileUpload.addChangeHandler(new ChangeHandler() {
+			@Override
+			public void onChange(ChangeEvent event) {
+				genUploadUrl();
+			}
+		});
 		
-		fileUpload_1 = new FileUpload();
-		fileUpload_1.setName("file1");
-		flexTable.setWidget(1, 1, fileUpload_1);
-		fileUpload_1.setWidth("284px");
+//		flexTable.setWidget(1, 0, lblNewLabel_2);
 		
-		Label lblNewLabel_1 = new Label("File 03");
-		lblNewLabel_1.setWordWrap(false);
-		flexTable.setWidget(2, 0, lblNewLabel_1);
+//		fileUpload_1 = new FileUpload();
+//		fileUpload_1.setName("file1");
+//		flexTable.setWidget(1, 1, fileUpload_1);
+//		fileUpload_1.setWidth("284px");
 		
-		fileUpload_2 = new FileUpload();
-		fileUpload_2.setName("file2");
-		flexTable.setWidget(2, 1, fileUpload_2);
-		fileUpload_2.setWidth("285px");
+//		Label lblNewLabel_1 = new Label("File 03");
+//		lblNewLabel_1.setWordWrap(false);
+//		flexTable.setWidget(2, 0, lblNewLabel_1);
 		
-		Label lblNewLabel_3 = new Label("File 04");
-		lblNewLabel_3.setWordWrap(false);
-		flexTable.setWidget(3, 0, lblNewLabel_3);
+//		fileUpload_2 = new FileUpload();
+//		fileUpload_2.setName("file2");
+//		flexTable.setWidget(2, 1, fileUpload_2);
+//		fileUpload_2.setWidth("285px");
 		
-		fileUpload_3 = new FileUpload();
-		fileUpload_3.setName("file3");
-		flexTable.setWidget(3, 1, fileUpload_3);
-		fileUpload_3.setWidth("286px");
+//		Label lblNewLabel_3 = new Label("File 04");
+//		lblNewLabel_3.setWordWrap(false);
+//		flexTable.setWidget(3, 0, lblNewLabel_3);
+		
+//		fileUpload_3 = new FileUpload();
+//		fileUpload_3.setName("file3");
+//		flexTable.setWidget(3, 1, fileUpload_3);
+//		fileUpload_3.setWidth("286px");
 		
 		hdnAuthor = new Hidden("Author");
+		hdnAuthor.setValue(MainWindow.getLoginAccount().getName());
 		vPanel.add(hdnAuthor);
 //		hdnPurchaseRequestId = new Hidden("purchaseRequestId");
 //		vPanel.add(hdnPurchaseRequestId);
@@ -114,14 +108,19 @@ public class UploadFilePanel extends FormPanel {
 		btnOK.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				String file0= fileUpload.getFilename().trim();
-				String file1= fileUpload_1.getFilename().trim();
-				String file2= fileUpload_2.getFilename().trim();
-				String file3= fileUpload_3.getFilename().trim();
-				if (file0.equals("") && file1.equals("") && file2.equals("") && file3.equals("")){
+				String file = fileUpload.getFilename().trim();
+//				String file1= fileUpload_1.getFilename().trim();
+//				String file2= fileUpload_2.getFilename().trim();
+//				String file3= fileUpload_3.getFilename().trim();
+//				if (file0.equals("") && file1.equals("") && file2.equals("") && file3.equals("")){
+//					Window.alert("no upload file specified !");
+//				} 
+				if(file.equals("")) {
 					Window.alert("no upload file specified !");
-				} else {
+				}
+				else {
 					if (uploadUrl!= null){
+						Window.alert(uploadUrl + "  , gg");
 						lblMessage.setText("uploading...");
 						UploadFilePanel.this.setAction(uploadUrl);
 						UploadFilePanel.this.submit();
@@ -134,7 +133,6 @@ public class UploadFilePanel extends FormPanel {
 					}
 				}
 			}
-			
 		});
 		btnOK.setText("upload");
 		horizontalPanel.add(btnOK);
@@ -160,7 +158,24 @@ public class UploadFilePanel extends FormPanel {
 //	    this.setVisible(false);
 	}	
 	
+	public void genUploadUrl() {
+		getUploadUrlClient.getUploadUrl(uploadServletUrl, new AsyncCallback<String>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("on failure");
+				uploadUrl = null;
+			}
+			@Override
+			public void onSuccess(String result) {
+//				Window.alert(result);
+				uploadUrl = result;
+			}
+		});
+	}
+	
+	
 	public void triggerFileUpload() {
+		
 		fileUpload.getElement().<ButtonElement>cast().click();
 	}
 }
