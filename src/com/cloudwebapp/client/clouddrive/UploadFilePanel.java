@@ -2,7 +2,9 @@ package com.cloudwebapp.client.clouddrive;
 
 import com.cloudwebapp.client.service.GetUploadUrlClient;
 import com.cloudwebapp.client.service.GetUploadUrlClientAsync;
+import com.cloudwebapp.client.ui.CenterDisplay;
 import com.cloudwebapp.client.ui.MainWindow;
+import com.cloudwebapp.client.ui.basic.DrivePage;
 import com.cloudwebapp.shared.AccountDTO;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ButtonElement;
@@ -26,145 +28,128 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class UploadFilePanel extends FormPanel {
 	private String uploadServletUrl = "/cloudwebapp/uploadServlet";
 	private String uploadUrl;
-	private FlexTable flexTable;
 	private FileUpload fileUpload;
-//	private FileUpload fileUpload_1;
-//	private FileUpload fileUpload_2;
-//	private FileUpload fileUpload_3;
 	private Button btnOK;
 	private Hidden hdnAuthor; 
 	private Hidden hdnParent;
-//	private Hidden hdnPurchaseRequestId;
-//	private Hidden hdnAttachmentType;
 	private Label lblMessage;	
 	private Button btnClear;
 	
 	public static GetUploadUrlClientAsync getUploadUrlClient = GWT.create(GetUploadUrlClient.class);
+	private Button btnNewButton;
+	private Label lbl_filename;
 	
 	public UploadFilePanel() {	
 		VerticalPanel vPanel= new VerticalPanel();
 		this.setWidget(vPanel);
 		
-		flexTable = new FlexTable();
-		vPanel.add(flexTable);
-		flexTable.setSize("333px", "100%");
-		
-		Label lblNewLabel = new Label("File");
-		lblNewLabel.setWordWrap(false);
-		flexTable.setWidget(0, 0, lblNewLabel);
-		
 		fileUpload = new FileUpload();
+		vPanel.add(fileUpload);
 		fileUpload.setName("file0");
-		flexTable.setWidget(0, 1, fileUpload);
-		fileUpload.setWidth("284px");
+		fileUpload.setWidth("100%");
+		fileUpload.setVisible(false);
 		
 		fileUpload.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent event) {
 				genUploadUrl();
+				if(fileUpload.getFilename() == null)
+					lbl_filename.setText("no file");
+				else
+					lbl_filename.setText(fileUpload.getFilename());
 			}
 		});
-		
-//		flexTable.setWidget(1, 0, lblNewLabel_2);
-		
-//		fileUpload_1 = new FileUpload();
-//		fileUpload_1.setName("file1");
-//		flexTable.setWidget(1, 1, fileUpload_1);
-//		fileUpload_1.setWidth("284px");
-		
-//		Label lblNewLabel_1 = new Label("File 03");
-//		lblNewLabel_1.setWordWrap(false);
-//		flexTable.setWidget(2, 0, lblNewLabel_1);
-		
-//		fileUpload_2 = new FileUpload();
-//		fileUpload_2.setName("file2");
-//		flexTable.setWidget(2, 1, fileUpload_2);
-//		fileUpload_2.setWidth("285px");
-		
-//		Label lblNewLabel_3 = new Label("File 04");
-//		lblNewLabel_3.setWordWrap(false);
-//		flexTable.setWidget(3, 0, lblNewLabel_3);
-		
-//		fileUpload_3 = new FileUpload();
-//		fileUpload_3.setName("file3");
-//		flexTable.setWidget(3, 1, fileUpload_3);
-//		fileUpload_3.setWidth("286px");
 		
 		hdnAuthor = new Hidden("Author");
 		hdnAuthor.setValue(MainWindow.getLoginAccount().getUsername());
 		vPanel.add(hdnAuthor);
 		
 		hdnParent = new Hidden("Parent");
-		hdnParent.setValue(MainWindow.getLoginAccount().getRootId().toString());
+		hdnParent.setValue(MainWindow.getFilePathStack().currentPathId().toString());
 		vPanel.add(hdnParent);
-		
-//		hdnAuthor = new Hidden("ParentId");
-//		hdnAuthor.setValue(account.getName());
-//		vPanel.add(hdnAuthor);
-		
-//		hdnPurchaseRequestId = new Hidden("purchaseRequestId");
-//		vPanel.add(hdnPurchaseRequestId);
-		
-//		this.hdnAttachmentType= new Hidden("attachmentType");
-//		vPanel.add(hdnAttachmentType);
-		
+
 		lblMessage = new Label("");
 		vPanel.add(lblMessage);
 		
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
 		vPanel.add(horizontalPanel);
-		horizontalPanel.setSize("333px", "40px");
+		horizontalPanel.setSize("100%", "100%");
 		
 		btnOK = new Button("New button");
+		btnOK.setStyleName("gwt-drivePage-button");
 		btnOK.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				String file = fileUpload.getFilename().trim();
-//				String file1= fileUpload_1.getFilename().trim();
-//				String file2= fileUpload_2.getFilename().trim();
-//				String file3= fileUpload_3.getFilename().trim();
-//				if (file0.equals("") && file1.equals("") && file2.equals("") && file3.equals("")){
-//					Window.alert("no upload file specified !");
-//				} 
 				if(file.equals("")) {
 					Window.alert("no upload file specified !");
 				}
 				else {
-					if (uploadUrl!= null){
-						Window.alert(uploadUrl + "  , gg");
+					if(uploadUrl != null){
 						lblMessage.setText("uploading...");
 						UploadFilePanel.this.setAction(uploadUrl);
 						UploadFilePanel.this.submit();
 						UploadFilePanel.this.reset();	
 					} else {
-//						UploadFilePanel.this.hide();
-//						Window.alert("current network is unable to connect to cloud server. \n"
-//								+ "Please check your network.");
+						
 					}
 				}
 			}
 		});
 		btnOK.setText("upload");
 		horizontalPanel.add(btnOK);
-		horizontalPanel.setCellVerticalAlignment(btnOK, HasVerticalAlignment.ALIGN_BOTTOM);
 		horizontalPanel.setCellHorizontalAlignment(btnOK, HasHorizontalAlignment.ALIGN_CENTER);
 		
-		btnClear = new Button("New button");
+		btnClear = new Button("clear");
+		btnClear.setStyleName("gwt-drivePage-button");
 		btnClear.addClickHandler(new ClickHandler() {
 			
 			public void onClick(ClickEvent event) {
-//				hide();
+				lblMessage.setText("");
+				lbl_filename.setText("no file");
+				MainWindow.refresh();
 			}
-			
 		});
 		horizontalPanel.add(btnClear);
-		horizontalPanel.setCellVerticalAlignment(btnClear, HasVerticalAlignment.ALIGN_BOTTOM);
 		horizontalPanel.setCellHorizontalAlignment(btnClear, HasHorizontalAlignment.ALIGN_CENTER);
+		
+		btnNewButton = new Button("Choose...");
+		btnNewButton.setText("Choose File");
+		btnNewButton.setStyleName("gwt-drivePage-button");
+		horizontalPanel.add(btnNewButton);
+		btnNewButton.setWidth("169px");
+		btnNewButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				triggerFileUpload();
+			}
+		});
+		
+		lbl_filename = new Label("no file");
+		lbl_filename.setStyleName("gwt-drivePage-label-noborder");
+		lbl_filename.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				triggerFileUpload();
+			}
+		});
+		horizontalPanel.add(lbl_filename);
+		lbl_filename.setWidth("100%");
+		horizontalPanel.setCellVerticalAlignment(lbl_filename, HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel.setCellHeight(lbl_filename, "100%");
+		horizontalPanel.setCellWidth(lbl_filename, "100%");
 						
 		this.setEncoding(FormPanel.ENCODING_MULTIPART);
 	    this.setMethod(FormPanel.METHOD_POST);
 	    
-//	    this.setVisible(false);
+	    this.addSubmitCompleteHandler(new SubmitCompleteHandler() {
+			@Override
+			public void onSubmitComplete(SubmitCompleteEvent event) {
+				lblMessage.setText("");
+				lbl_filename.setText("no file");
+				MainWindow.refresh();
+			}
+		});
 	}	
 	
 	public void genUploadUrl() {
@@ -176,14 +161,12 @@ public class UploadFilePanel extends FormPanel {
 			}
 			@Override
 			public void onSuccess(String result) {
-//				Window.alert(result);
 				uploadUrl = result;
 			}
 		});
 	}
 	
 	public void triggerFileUpload() {
-		
 		fileUpload.getElement().<ButtonElement>cast().click();
 	}
 }

@@ -122,19 +122,84 @@
 }
 /*drive page*/
 .gwt-drivePage-title {
-	border: black 1px solid;
-	font-family:consolas bold, ubuntu bold;
-	font-size:14pt;
+	cursor: default;
+	font-family: consolas bold, ubuntu bold;
+	font-size: 14pt;
 	background-color: #ffffff;
 }
 
-.gwt-drivePage-title:hover {
-	background-color: #fa5050;
+.gwt-drivePage-fileItem {
+	cursor: default;
+	font-family: consolas bold, ubuntu bold;
+	font-size: 14pt;
+	background-color: #ffffff;
+}
+
+.gwt-drivePage-fileItem:hover {
+	cursor: default;
+	color: #ff0000;
+	opacity: 0.5;
+	background-color: #e6e6e6;
 } 
 
-.gwt-drivePage-title:pressed {
+.gwt-drivePage-fileItem:pressed {
+	cursor: default;
+	color: #ff9999;
+	opacity: 0.8;
 	background-color: #ff9999;
 } 
+
+.gwt-drivePage-folderItem {
+	cursor: default;
+	color: #ff0000;
+	font-family: consolas bold, ubuntu bold;
+	font-size: 14pt;
+	background-color: #ffffff;
+}
+
+.gwt-drivePage-folderItem:hover {
+	cursor: default;
+	color: #ff8888;
+	opacity: 0.5;
+	background-color: #e6e6e6;
+} 
+
+.gwt-drivePage-folderItem:pressed {
+	cursor: default;
+	color: #ffbbbb;
+	opacity: 0.8;
+	background-color: #ff9999;
+} 
+
+.gwt-drivePage-button { 
+	border: 1px solid black;
+	font-family: consolas, ubuntu;
+	font-size: 16pt
+}
+
+.gwt-drivePage-button:hover {
+	background-color: #A8A8A8;
+}
+
+.gwt-drivePage-button:disable {
+	background-color: #ff5353 !important;
+}
+
+.gwt-drivePage-label { 
+	width: 99%;
+	cursor: default;
+	font-family: consolas, ubuntu;
+	font-size: 18pt;
+	border: black 2px solid;
+}
+
+.gwt-drivePage-label-noborder { 
+	width: 99%;
+	cursor: default;
+	font-family: consolas, ubuntu;
+	font-size: 18pt;
+	word-wrap: break-word
+}
 
 /*other*/
 .gwt-field-error {

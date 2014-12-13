@@ -36,31 +36,21 @@ public class UploadServlet extends HttpServlet {
 			if (list.isEmpty()) continue;			
 			BlobKey blobKey = list.get(0);
 			BlobInfo blobInfo = this.blobInfoFactory.loadBlobInfo(blobKey);
-			System.out.println("File with blobkey " + blobKey.getKeyString() + " was saved in blobstore.");
+//			System.out.println("File with blobkey " + blobKey.getKeyString() + " was saved in blobstore.");
 			if (blobInfo.getFilename() == null || blobInfo.getFilename().trim().isEmpty()){
 				this.blobstoreService.delete(blobKey);
 				continue;
 			}
+			
 			String username = req.getParameter("Author");
 			Long parent = Long.parseLong(req.getParameter("Parent"));
 			String filename = blobInfo.getFilename();
 			long fileSize = blobInfo.getSize();
-//			Long parent = MainWindow.getLoginAccount().getRootId();
-			System.out.println("parent = " + req.getParameter("Parent"));
-			File file = new File(username, filename, fileSize, parent, blobKey);
-			file.getParentKey();
-			pm.makePersistent(file);
+			String updateTime = blobInfo.getCreation().toString();
 			
-			/*
-			 * public File(String author, String fileName, long fileSize, Long parent, BlobKey blobKey) {
-		this.blobKey = blobKey.getKeyString();
-		this.author = author;
-		this.parent = parent;
-//		this.child = null;
-		this.type = File.FILE;
-		this.fileName = fileName;
-		this.fileSize = fileSize;
-	}*/
+			File file = new File(username, filename, fileSize, parent, blobKey);
+			file.setUpdateTime(updateTime);
+			pm.makePersistent(file);
 		}	
 		
 		pm.close();		

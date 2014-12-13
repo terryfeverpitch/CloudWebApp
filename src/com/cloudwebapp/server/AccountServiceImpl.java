@@ -58,6 +58,7 @@ public class AccountServiceImpl extends RemoteServiceServlet implements AccountS
 			
 			if(result.isEmpty()) {
 				File rt = pm.makePersistent(root);
+				rt.setUpdateTime(sd);
 				newAccount.setRootId(rt.getId());
 				
 				pm.makePersistent(newAccount);
@@ -191,6 +192,7 @@ public class AccountServiceImpl extends RemoteServiceServlet implements AccountS
 					AccountDTO ac = new AccountDTO();
 					ac.setValue(account.getUsername(), account.getPassword(), account.getSignUpDate(),
 							account.getName(), account.getAddress(), account.getBirthDate(), account.getEmail(), account.getType(), account.isAvailable());
+					ac.setRootId(account.getRootId());
 					list.add(ac);
 				}
 				return list;

@@ -21,14 +21,14 @@ public class File {
 	private String author;
 	@Persistent
 	private Long parent;
-//	@Persistent
-//	private ArrayList<Long> child;
 	@Persistent
 	private int type;
 	@Persistent
 	private String fileName;
 	@Persistent
 	private long fileSize;
+	@Persistent
+	private String updateTime;
 
 	public File() {
 	}
@@ -37,7 +37,6 @@ public class File {
 		this.blobKey = null;
 		this.author = author;
 		this.parent = parent;
-//		this.child = new ArrayList<Long>();
 		this.type = File.DIR;
 		this.fileName = fileName;
 		this.fileSize = 0;
@@ -47,17 +46,44 @@ public class File {
 		this.blobKey = blobKey.getKeyString();
 		this.author = author;
 		this.parent = parent;
-//		this.child = null;
 		this.type = File.FILE;
 		this.fileName = fileName;
 		this.fileSize = fileSize;
 	}
 	
-	public Long getId() {
-		return this.id;
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
+	}
+	
+	public String getAuthor() {
+		return this.author;
+	}
+	
+	public String getFileName() {
+		return this.fileName;
+	}
+	
+	public long getFileSize() {
+		return this.fileSize;
 	}
 	
 	public Long getParentKey() {
 		return this.parent;
+	}
+	
+	public Long getId() {
+		return this.id;
+	}	
+	
+	public int getType() {
+		return this.type;
+	}
+	
+	public String getUpdateTime() {
+		return this.updateTime;
+	}
+	
+	public String getBlobKey() {
+		return this.blobKey;
 	}
 }

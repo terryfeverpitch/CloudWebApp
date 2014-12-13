@@ -6,6 +6,7 @@ import java.util.Date;
 import com.cloudwebapp.client.CloudWebApp;
 import com.cloudwebapp.server.Account;
 import com.cloudwebapp.shared.AccountDTO;
+import com.cloudwebapp.shared.FilePathStack;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -17,9 +18,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class MainWindow extends VerticalPanel {
 	// data, objects, variables
-	private static DialogBox dialog;
+	public static DialogBox dialog;
 	private static AccountDTO account;
-//	private String username;
+	private static FilePathStack pathStack = new FilePathStack();
 	private static int IndexOfPage = 0;
 	// UI widgets
 	// menu bar
@@ -83,12 +84,12 @@ public class MainWindow extends VerticalPanel {
 					@Override
 					public void onSuccess(AccountDTO result) {
 						account = result;
-						centerDisplay.getDrivePage().getFileSystem();
+						pathStack.clear();
+						pathStack.push(account.getRootId());
+						CenterDisplay.buildDrivePage();
 						centerDisplay.changeTo(CenterDisplay.DRIVEPAGE_INDEX);
 					}
 				});
-//				cptnpnlMain.setCaptionText("Drive");
-//				deckPanel.showWidget(1);
 			}
 		});
 		
@@ -102,13 +103,12 @@ public class MainWindow extends VerticalPanel {
 					@Override
 					public void onSuccess(AccountDTO result) {
 						account = result;
-						centerDisplay.getEditPage().setAccountInfo(account);
+						CenterDisplay.getEditPage().setAccountInfo(account);
 						centerDisplay.changeTo(CenterDisplay.EDITPAGE_INDEX);
 					}
 				});
 			}
 		});
-		
 		
 		mntmLogOut = new MenuItem("Log out", false, new Command() {
 			public void execute() {
@@ -141,7 +141,7 @@ public class MainWindow extends VerticalPanel {
 
 					@Override
 					public void onSuccess(ArrayList<AccountDTO> result) {
-						centerDisplay.buildDataStoreViewer(result);
+						CenterDisplay.buildDataStoreViewer(result);
 						centerDisplay.changeTo(CenterDisplay.DATASTOREVIEWER_INDEX);
 					}
 				});
@@ -151,7 +151,16 @@ public class MainWindow extends VerticalPanel {
 		menuBar.addItem(item);
 	}
 	
+	public static void refresh() {
+		CenterDisplay.buildDrivePage();
+		centerDisplay.changeTo(CenterDisplay.DRIVEPAGE_INDEX);
+	}
+
 	public static AccountDTO getLoginAccount() {
 		return MainWindow.account;
+	}
+	
+	public static FilePathStack getFilePathStack() {
+		return MainWindow.pathStack;
 	}
 }

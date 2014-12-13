@@ -7,6 +7,8 @@ import com.cloudwebapp.client.ui.MainWindow;
 import com.cloudwebapp.client.ui.SignupPage;
 import com.cloudwebapp.client.service.AccountService;
 import com.cloudwebapp.client.service.AccountServiceAsync;
+import com.cloudwebapp.client.service.FileManagerService;
+import com.cloudwebapp.client.service.FileManagerServiceAsync;
 import com.cloudwebapp.server.Account;
 import com.cloudwebapp.shared.FieldVerifier;
 import com.cloudwebapp.shared.MessageCode;
@@ -32,6 +34,7 @@ public class CloudWebApp implements EntryPoint {
 //	private static HomePage homepage;
 	private static MainWindow mainWindow;
 	public static AccountServiceAsync accountService = GWT.create(AccountService.class);
+	public static FileManagerServiceAsync fileManager = GWT.create(FileManagerService.class);
 	
 	public mClickHandler clickHandler = new mClickHandler();
 	

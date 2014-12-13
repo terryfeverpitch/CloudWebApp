@@ -25,5 +25,4 @@ public class GetUploadUrlClientImpl extends RemoteServiceServlet implements GetU
 	public String getUploadUrl(String servletUrl) {
 		return blobstoreService.createUploadUrl(servletUrl);
 	}
-	
 }

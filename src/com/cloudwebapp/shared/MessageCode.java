@@ -11,7 +11,8 @@ public class MessageCode {
 	public final static int AVAILABLE_SUCCESS_BLOCK 		  = 4;
 		// delete
 	public final static int DELETE_SUCCESS					  = 5;
-	
+		// new folder
+	public final static int NEW_FOLDER_SUCCESS				  = 6;
 	// negative
 		// verify
 	public final static int VERIFY_FAILURE_EXCEPTION_ERROR	  = -1;
@@ -28,4 +29,6 @@ public class MessageCode {
 	public final static int AVAILABLE_FAILURE_EXCEPTION_ERROR = -8;
 		// delete
 	public final static int DELETE_FAILURE_EXCEPTION_ERROR	  = -9;
+	public final static int NEW_FOLDER_FAILURE_NAME_OVERLAP   = -10;
+	public final static int NEW_FOLDER_FAILURE_EXCEPTION_ERROR = -11;
 }

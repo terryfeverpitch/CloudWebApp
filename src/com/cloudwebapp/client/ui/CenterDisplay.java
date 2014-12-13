@@ -42,7 +42,7 @@ public class CenterDisplay extends CaptionPanel {
 		deckPanel.setStyleName("deckPanel");
 		deckPanel.add(homePage = new HomePage());
 		deckPanel.add(editPage = new EditPage());
-		deckPanel.add(drivePage = new DrivePage());
+//		deckPanel.add(drivePage = new DrivePage(MainWindow.getLoginAccount().getRootId()));
 		
 		this.setCaptionText(HOMEPAGE_TITLE);
 		deckPanel.showWidget(HOMEPAGE_INDEX);
@@ -56,7 +56,7 @@ public class CenterDisplay extends CaptionPanel {
 			currentIndex = deckPanel.getWidgetIndex(homePage);
 		}
 		else if(INDEX_OF_PAGE == DRIVEPAGE_INDEX) {
-			this.setCaptionText(CenterDisplay.DRIVEPAGE_TITLE + " /root");
+			this.setCaptionText(CenterDisplay.DRIVEPAGE_TITLE);
 			currentIndex = deckPanel.getWidgetIndex(drivePage);
 		}
 		else if(INDEX_OF_PAGE == EDITPAGE_INDEX) {
@@ -71,16 +71,22 @@ public class CenterDisplay extends CaptionPanel {
 		deckPanel.showWidget(currentIndex);
 	}
 	
-	public void buildDataStoreViewer(ArrayList<AccountDTO> in) {
+	public static void buildDataStoreViewer(ArrayList<AccountDTO> in) {
 		datastoreViewerPage = new DatastoreViewerPage(in.size() + 1, 10, in);
 		deckPanel.add(datastoreViewerPage);
 	}
 	
-	public EditPage getEditPage() {
+	public static void buildDrivePage() {
+		drivePage = null;
+		drivePage = new DrivePage();
+		deckPanel.add(drivePage);
+	}
+	
+	public static EditPage getEditPage() {
 		return editPage;
 	}
 	
-	public DrivePage getDrivePage() {
+	public static DrivePage getDrivePage() {
 		return drivePage;
 	}
 }
