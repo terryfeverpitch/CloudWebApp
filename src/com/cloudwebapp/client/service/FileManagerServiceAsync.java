@@ -13,6 +13,8 @@ public interface FileManagerServiceAsync {
 	void getFiles(String author, Long parent,
 			AsyncCallback<ArrayList<FileDTO>> callback);
 
-	void getPath(Long id, AsyncCallback<ArrayList<String>> callback);
+	void renameFile(Long id, String newName, AsyncCallback<Integer> callback);
+
+	void deleteFiles(ArrayList<Long> id_list, AsyncCallback<Integer> callback);
 
 }

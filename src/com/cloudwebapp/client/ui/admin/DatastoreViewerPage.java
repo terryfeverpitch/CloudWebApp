@@ -3,7 +3,6 @@ package com.cloudwebapp.client.ui.admin;
 import java.util.ArrayList;
 
 import com.cloudwebapp.client.CloudWebApp;
-import com.cloudwebapp.client.ui.CenterDisplay;
 import com.cloudwebapp.server.Account;
 import com.cloudwebapp.shared.AccountDTO;
 import com.cloudwebapp.shared.MessageCode;
@@ -22,12 +21,9 @@ public class DatastoreViewerPage extends Grid {
 		this.accountList = in;
 		build();
 		buildDataRows();
-//		CenterDisplay parent = (CenterDisplay) this.getParent();
-//		parent.changeTo(CenterDisplay.DATASTOREVIEWER_INDEX);
 	}
 	
 	public void build() {
-//		deckPanel.add(dataStorePage);
 		Label lbl_column_delete = new Label("DELETE");
 		this.setWidget(0, 0, lbl_column_delete);
 		
@@ -67,13 +63,8 @@ public class DatastoreViewerPage extends Grid {
 	}
 	
 	public DatastoreRow buildDataRows() {
-//		row = null;
 		DatastoreRow[] rows = new DatastoreRow[accountList.size() + 1];
-//		if(dataStorePage != null) {
-//			dataStorePage.removeFromParent();
-//			dataStorePage = null;
-//		}
-//		buildDataStorePage(account.size() + 1);
+
 		int i = 0;
 		for(AccountDTO ac : accountList) {
 			rows[i] = new DatastoreRow(ac);
@@ -146,16 +137,31 @@ public class DatastoreViewerPage extends Grid {
 				String msg = "Are you sure you want to delete " + account.getUsername() + "?\n" + "It can't be restored.";
 				if(!Window.confirm(msg))
 					return;
+	
 				CloudWebApp.accountService.deleteAccount(account.getUsername(), new AsyncCallback<Integer>() {
 					@Override
 					public void onFailure(Throwable caught) {	
-						Window.alert("failure");
+						Window.alert("deleteAccount ailure");
 					}
 					@Override
 					public void onSuccess(Integer result) {
 						if(result == MessageCode.DELETE_SUCCESS) {
 							btn_delete.setEnabled(false);
-							btn_block.setEnabled(false);
+							btn_block.setEnabled(false);	
+							
+							ArrayList<Long> deleteList = new ArrayList<Long>();
+							deleteList.add(account.getRootId());
+							CloudWebApp.fileManager.deleteFiles(deleteList, 
+									new AsyncCallback<Integer>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Window.alert("deleteFiles failure");
+								}
+								@Override
+								public void onSuccess(Integer result) {
+									Window.alert("delete OK");
+								}
+							});
 						}
 						else if(result == MessageCode.ACCOUNT_NOT_FOUND)
 							Window.alert("account not found");

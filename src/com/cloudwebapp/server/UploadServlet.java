@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.cloudwebapp.client.PMF;
-import com.cloudwebapp.client.ui.MainWindow;
 import com.google.appengine.api.blobstore.BlobInfo;
 import com.google.appengine.api.blobstore.BlobInfoFactory;
 import com.google.appengine.api.blobstore.BlobKey;
@@ -33,10 +32,10 @@ public class UploadServlet extends HttpServlet {
 		Map<String, List<BlobKey>> blobMap = blobstoreService.getUploads(req);
 				
 		for (List<BlobKey> list: blobMap.values()){
-			if (list.isEmpty()) continue;			
+			if (list.isEmpty()) 
+				continue;			
 			BlobKey blobKey = list.get(0);
 			BlobInfo blobInfo = this.blobInfoFactory.loadBlobInfo(blobKey);
-//			System.out.println("File with blobkey " + blobKey.getKeyString() + " was saved in blobstore.");
 			if (blobInfo.getFilename() == null || blobInfo.getFilename().trim().isEmpty()){
 				this.blobstoreService.delete(blobKey);
 				continue;
@@ -51,14 +50,19 @@ public class UploadServlet extends HttpServlet {
 			File file = new File(username, filename, fileSize, parent, blobKey);
 			file.setUpdateTime(updateTime);
 			pm.makePersistent(file);
+			updateParent(file.getParentKey(), updateTime);
 		}	
 		
 		pm.close();		
 	}
 	
-	@Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        resp.setHeader("Content-Type", "text/plain");
-//        resp.getWriter().write(blobstore.createUploadUrl("/uploadfinished"));
-    }
+	private void updateParent(Long id, String updateTime) {
+		if(id == null)
+			return;
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		File f = (File) pm.getObjectById(File.class, id);
+		f.setUpdateTime(updateTime);
+		pm.close();
+		updateParent(f.getParentKey(), updateTime);
+	}
 }

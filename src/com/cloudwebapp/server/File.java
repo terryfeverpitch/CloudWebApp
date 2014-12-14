@@ -55,6 +55,10 @@ public class File {
 		this.updateTime = updateTime;
 	}
 	
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	
 	public String getAuthor() {
 		return this.author;
 	}

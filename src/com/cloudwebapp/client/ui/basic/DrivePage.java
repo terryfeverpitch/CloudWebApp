@@ -4,22 +4,18 @@ import java.util.ArrayList;
 
 import com.cloudwebapp.client.CloudWebApp;
 import com.cloudwebapp.client.clouddrive.UploadFilePanel;
-import com.cloudwebapp.client.service.FileManagerServiceAsync;
-import com.cloudwebapp.client.ui.CenterDisplay;
 import com.cloudwebapp.client.ui.MainWindow;
-import com.cloudwebapp.client.ui.admin.DatastoreViewerPage.DatastoreRow;
 import com.cloudwebapp.server.File;
 import com.cloudwebapp.shared.FieldVerifier;
 import com.cloudwebapp.shared.FileDTO;
+import com.cloudwebapp.shared.FilePathStack;
 import com.cloudwebapp.shared.MessageCode;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
@@ -35,29 +31,77 @@ import com.google.gwt.user.client.ui.TextBox;
 public class DrivePage extends FlexTable {
 	public static UploadFilePanel uploadFilePanel;	
 	private Label lbl_path;
-	private int size;
+	private FileDTORow[] rows;
+	private static ArrayList<Long> list = new ArrayList<Long>();
 	
 	public DrivePage() {
+		setWidth("100%");
 		uploadFilePanel = new UploadFilePanel();
 		setWidget(0, 0, uploadFilePanel);
 		
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
+		horizontalPanel.setStyleName("gwt-drivePage-bar");
 		horizontalPanel.setSpacing(1);
 		setWidget(1, 0, horizontalPanel);
 		horizontalPanel.setWidth("100%");
+		
+		Button btnRefresh = new Button("Refresh");
+		btnRefresh.setStyleName("gwt-drivePage-button");
+		horizontalPanel.add(btnRefresh);
+		
+		Button btnDelete = new Button("Delete");
+		btnDelete.setStyleName("gwt-drivePage-button");
+		horizontalPanel.add(btnDelete);
 		Button btnNewFolder = new Button("New Folder");
 		horizontalPanel.add(btnNewFolder);
-		btnNewFolder.setWidth("154px");
+		btnNewFolder.setWidth("123px");
 		btnNewFolder.setStyleName("gwt-loginPage-button");
-		
-		lbl_path = new Label("Current Path : ");
+
+		lbl_path = new Label(MainWindow.getFilePathStack().getPath());
 		lbl_path.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 		lbl_path.setDirectionEstimator(false);
+
 		horizontalPanel.add(lbl_path);
 		lbl_path.setWidth("100%");
 		horizontalPanel.setCellVerticalAlignment(lbl_path, HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel.setCellWidth(lbl_path, "100%");
 		lbl_path.setStyleName("gwt-drivePage-label-noborder");
+		btnRefresh.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				MainWindow.refresh();
+			}
+		});
+		
+		btnDelete.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				list.clear();
+				for(int i = 1; i < rows.length; i++)
+					if(rows[i].chckbx_delete.getValue())
+						list.add(rows[i].file.getId());
+				
+				if(list.isEmpty() || list == null) {
+					Window.alert("no selected item to delete.");
+					return;
+				}
+				boolean confirm = Window.confirm("Are you sure you want to permanently delete chosen items and it's contents?");
+				if(!confirm)
+					return;
+				CloudWebApp.fileManager.deleteFiles(list,  
+						new AsyncCallback<Integer>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("failure");
+					}
+					@Override
+					public void onSuccess(Integer result) {
+						MainWindow.refresh();
+					}
+				});
+			}
+		});
+		
 		btnNewFolder.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -66,7 +110,7 @@ public class DrivePage extends FlexTable {
 					HorizontalPanel row;
 					VerticalPanel contents;
 					contents = new VerticalPanel();
-					HTML message = new HTML("folder name : ");
+					HTML message = new HTML("Create a new folder : ");
 					message.setStyleName("gwt-drivePage-label-noborder");
 					final TextBox textBox = new TextBox();
 					textBox.setText("New Folder");
@@ -75,12 +119,10 @@ public class DrivePage extends FlexTable {
 						public void onClick(ClickEvent event) {
 							// new folder
 							CloudWebApp.fileManager.newFolder(MainWindow.getLoginAccount().getUsername(), 
-									textBox.getText(), MainWindow.getFilePathStack().currentPathId(), 
+									textBox.getText(), MainWindow.getFilePathStack().currentPath().folderId, 
 									new AsyncCallback<Integer>() {
 								@Override
 								public void onFailure(Throwable caught) {
-									// TODO Auto-generated method stub
-									
 								}
 								@Override
 								public void onSuccess(Integer result) {
@@ -133,27 +175,47 @@ public class DrivePage extends FlexTable {
 		
 		CheckBox chckbxNewCheckBox = new CheckBox("");
 		setWidget(2, 0, chckbxNewCheckBox);
-		chckbxNewCheckBox.setWidth("182px");
+		chckbxNewCheckBox.setWidth("100%");
+		chckbxNewCheckBox.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				CheckBox cb = (CheckBox) event.getSource();
+				boolean isChecked = cb.getValue();
+				int i = 4;
+				while(i < DrivePage.this.getRowCount()) {
+					if(DrivePage.this.getWidget(i, 0) == null)
+						break;
+					else {
+						CheckBox item = (CheckBox) DrivePage.this.getWidget(i++, 0);
+						item.setValue(isChecked);
+					}
+				}
+			}
+		});
 		
 		Label lblNewLabel_4 = new Label("Edit");
 		lblNewLabel_4.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		lblNewLabel_4.setStyleName("gwt-drivePage-title");
 		setWidget(2, 1, lblNewLabel_4);
+		lblNewLabel_4.setWidth("100%");
 		
 		Label lblNewLabel_1 = new Label("Name");
 		lblNewLabel_1.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		lblNewLabel_1.setStyleName("gwt-drivePage-title");
 		setWidget(2, 2, lblNewLabel_1);
+		lblNewLabel_1.setWidth("100%");
 		
-		Label lblNewLabel_2 = new Label("Size");
+		Label lblNewLabel_2 = new Label("Size(bytes)");
 		lblNewLabel_2.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		lblNewLabel_2.setStyleName("gwt-drivePage-title");
 		setWidget(2, 3, lblNewLabel_2);
+		lblNewLabel_2.setWidth("100%");
 		
 		Label lblNewLabel_3 = new Label("Update Time");
 		lblNewLabel_3.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		lblNewLabel_3.setStyleName("gwt-drivePage-title");
 		setWidget(2, 4, lblNewLabel_3);
+		lblNewLabel_3.setWidth("100%");
 		getFlexCellFormatter().setColSpan(0, 0, 5);
 		getCellFormatter().setVerticalAlignment(2, 0, HasVerticalAlignment.ALIGN_MIDDLE);
 		getFlexCellFormatter().setColSpan(1, 0, 5);
@@ -162,15 +224,9 @@ public class DrivePage extends FlexTable {
 		gointo();
 	}
 	
-//	public void setFileSystem() {
-//		lbl_path.setText("Current Path : " + "/root");
-//		currentPath = MainWindow.getLoginAccount().getRootId();
-//		gointo();
-//	}
-	
 	public void gointo() {
 		CloudWebApp.fileManager.getFiles(MainWindow.getLoginAccount().getUsername(), 
-				MainWindow.getFilePathStack().currentPathId(), 
+				MainWindow.getFilePathStack().currentPath().folderId, 
 				new AsyncCallback<ArrayList<FileDTO>>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -178,7 +234,7 @@ public class DrivePage extends FlexTable {
 			}
 			@Override
 			public void onSuccess(ArrayList<FileDTO> result) {	
-				FileDTORow[] rows;
+				
 				if(result == null)
 					rows = new FileDTORow[1];
 				else
@@ -187,9 +243,7 @@ public class DrivePage extends FlexTable {
 				rows[0] = new FileDTORow();
 				setWidget(3, 2, rows[0].fileName);
 				getFlexCellFormatter().setColSpan(3, 2, 4);
-				
-				size = rows.length - 1;
-				
+
 				if(rows.length < 2)
 					return;
 				int i = 1;
@@ -219,7 +273,7 @@ public class DrivePage extends FlexTable {
 		protected Label fileName;
 		protected Label fileSize;
 		protected Label fileUpdateTime;
-		private FileDTO file;
+		protected FileDTO file;
 		
 		public FileDTORow() {
 			chckbx_delete.setVisible(false);
@@ -233,9 +287,9 @@ public class DrivePage extends FlexTable {
 				// go back
 				@Override
 				public void onClick(ClickEvent event) {
-					Long current = MainWindow.getFilePathStack().currentPathId();
+					FilePathStack.Path current = MainWindow.getFilePathStack().currentPath();
 					MainWindow.getFilePathStack().pop();	
-					Long parent = MainWindow.getFilePathStack().currentPathId();
+					FilePathStack.Path parent = MainWindow.getFilePathStack().currentPath();
 					if(parent == null) {
 						MainWindow.getFilePathStack().push(current);
 					}
@@ -250,7 +304,7 @@ public class DrivePage extends FlexTable {
 			file = row_file;
 			fileName = new Label(file.getFileName());
 			fileUpdateTime = new Label(file.getUpdateTime());
-			
+			btn_rename.addClickHandler(this);
 			if(file.getType() == File.DIR) {
 				fileSize = new Label("Folder");
 				setFolderItemStyle();
@@ -258,7 +312,8 @@ public class DrivePage extends FlexTable {
 					// go into
 					@Override
 					public void onClick(ClickEvent event) {
-						MainWindow.getFilePathStack().push(file.getId());
+						MainWindow.getFilePathStack().push(
+								new FilePathStack.Path(file.getId(), file.getFileName()));
 						MainWindow.refresh();
 					}
 				});
@@ -268,13 +323,9 @@ public class DrivePage extends FlexTable {
 					// download
 					@Override
 					public void onClick(ClickEvent event) {
-//						Window.alert(file.getBlobKey());
-						String url = "/cloudwebapp/downloadServlet?blob-key=" + file.getBlobKey() + "&name=" + file.getFileName();
+						String url = "/cloudwebapp/downloadServlet?blob-key=" + file.getBlobKey() + 
+								"&name=" + file.getFileName();
 						Window.open(url, null, null);
-//						Anchor anchor= new Anchor(file.getFileName());
-						
-//						anchor.setHref(url);
-//						anchor.setTarget("_blank");
 					}
 				});
 				
@@ -308,7 +359,71 @@ public class DrivePage extends FlexTable {
 		
 		@Override
 		public void onClick(ClickEvent event) {
+			MainWindow.dialog = new DialogBox(false);
+			HorizontalPanel row;
+			VerticalPanel contents;
+			contents = new VerticalPanel();
+			HTML message = new HTML("Rename the chosen file ");
+			message.setStyleName("gwt-drivePage-label-noborder");
+			final TextBox textBox = new TextBox();
+			textBox.setText(file.getFileName());
+			final Button ok = new Button("ok", new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					// rename file
+					CloudWebApp.fileManager.renameFile(file.getId(), textBox.getText(),
+							new AsyncCallback<Integer>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							Window.alert("failure");
+						}
+						@Override
+						public void onSuccess(Integer result) {
+							if(result == MessageCode.RENAME_FILE_FAILURE_NAME_OVERLAP)
+								Window.alert("this destination already contains a folder named " + textBox.getText());
+							else if(result == MessageCode.RENAME_FILE_FAILURE_NOTFOUND)
+								Window.alert("target not found");
+
+							MainWindow.refresh();
+						}
+					});
+					
+					MainWindow.dialog.hide();	
+				}
+		    });
+			ok.setStyleName("gwt-drivePage-button");
 			
+		    Button back = new Button("back", new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					MainWindow.dialog.hide();	
+				}
+		    });
+		    back.setStyleName("gwt-drivePage-button");
+			
+			textBox.setStyleName("gwt-drivePage-label");
+			textBox.addChangeHandler(new ChangeHandler() {
+				@Override
+				public void onChange(ChangeEvent event) {
+					TextBox tb = (TextBox) event.getSource();
+					boolean check = FieldVerifier.folderNameCheck(tb.getText());				
+					if(check)
+						tb.removeStyleName("gwt-field-error");
+					else
+						tb.addStyleName("gwt-field-error");
+					ok.setVisible(check);
+				}
+			});
+
+		    row = new HorizontalPanel();
+		    row.add(back);
+		    row.add(ok);
+		    
+		    contents.add(message);
+		    contents.add(textBox);
+		    contents.add(row);
+		    MainWindow.dialog.setWidget(contents);
+		    MainWindow.dialog.center();
 		}
 	}
 }

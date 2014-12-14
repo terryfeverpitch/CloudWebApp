@@ -145,7 +145,6 @@ public class EditPage extends Grid implements ClickHandler {
 				dialog.setVisible(true);
 				return;
 			}
-			// signPage = new SignupPage(SignupPage.EDIT_MODE, account.getUsername(), account.getPassword());
 			MainWindow.getLoginAccount().updateValue(signPage.tb_username.getText(), signPage.ptb_password.getText(), 
 					signPage.tb_people_name.getText(), signPage.tb_people_address.getText(), 
 					signPage.db_people_birthDate.getTextBox().getText(), signPage.tb_mail.getText());

@@ -28,6 +28,7 @@ public class CenterDisplay extends CaptionPanel {
 	public static HomePage homePage;
 	public static EditPage editPage;
 	public static DrivePage drivePage;
+//	public static ShareDrivePage
 	// content for admin
 	public static DatastoreViewerPage datastoreViewerPage;
 	
@@ -42,7 +43,6 @@ public class CenterDisplay extends CaptionPanel {
 		deckPanel.setStyleName("deckPanel");
 		deckPanel.add(homePage = new HomePage());
 		deckPanel.add(editPage = new EditPage());
-//		deckPanel.add(drivePage = new DrivePage(MainWindow.getLoginAccount().getRootId()));
 		
 		this.setCaptionText(HOMEPAGE_TITLE);
 		deckPanel.showWidget(HOMEPAGE_INDEX);

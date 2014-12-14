@@ -10,5 +10,6 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public interface FileManagerService extends RemoteService {
 	public int newFolder(String author, String folderName, Long parent);
 	public ArrayList<FileDTO> getFiles(String author, Long parent);
-	public ArrayList<String> getPath(Long id);
+	int renameFile(Long id, String newName);
+	public int deleteFiles(ArrayList<Long> id_list);
 }

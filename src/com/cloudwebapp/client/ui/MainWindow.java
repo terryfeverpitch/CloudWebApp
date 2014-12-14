@@ -1,7 +1,6 @@
 package com.cloudwebapp.client.ui;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import com.cloudwebapp.client.CloudWebApp;
 import com.cloudwebapp.server.Account;
@@ -21,7 +20,6 @@ public class MainWindow extends VerticalPanel {
 	public static DialogBox dialog;
 	private static AccountDTO account;
 	private static FilePathStack pathStack = new FilePathStack();
-	private static int IndexOfPage = 0;
 	// UI widgets
 	// menu bar
 	private MenuBar menuBar;
@@ -85,7 +83,7 @@ public class MainWindow extends VerticalPanel {
 					public void onSuccess(AccountDTO result) {
 						account = result;
 						pathStack.clear();
-						pathStack.push(account.getRootId());
+						pathStack.push(new FilePathStack.Path(account.getRootId(), "root"));
 						CenterDisplay.buildDrivePage();
 						centerDisplay.changeTo(CenterDisplay.DRIVEPAGE_INDEX);
 					}
@@ -152,6 +150,8 @@ public class MainWindow extends VerticalPanel {
 	}
 	
 	public static void refresh() {
+		CenterDisplay.drivePage.removeFromParent();
+		CenterDisplay.drivePage = null;
 		CenterDisplay.buildDrivePage();
 		centerDisplay.changeTo(CenterDisplay.DRIVEPAGE_INDEX);
 	}

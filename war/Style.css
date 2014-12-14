@@ -83,7 +83,7 @@
 .gwt-loginPage-button { 
 	border: 1px solid black;
 	font-family: consolas, ubuntu;
-	font-size: 16pt
+	font-size: 14pt
 }
 
 .gwt-loginPage-button:hover {
@@ -125,7 +125,6 @@
 	cursor: default;
 	font-family: consolas bold, ubuntu bold;
 	font-size: 14pt;
-	background-color: #ffffff;
 }
 
 .gwt-drivePage-fileItem {
@@ -174,7 +173,7 @@
 .gwt-drivePage-button { 
 	border: 1px solid black;
 	font-family: consolas, ubuntu;
-	font-size: 16pt
+	font-size: 14pt
 }
 
 .gwt-drivePage-button:hover {
@@ -193,11 +192,24 @@
 	border: black 2px solid;
 }
 
+.gwt-drivePage-uploadpanel {
+	width: 100%;
+	font-size: 24pt;
+  	background: #008AB8;
+}
+
+.gwt-drivePage-bar {
+	width: 100%;
+	font-size: 14pt;
+  	background: #008AB8;
+}
+
 .gwt-drivePage-label-noborder { 
+	color: #ffffff;
 	width: 99%;
 	cursor: default;
 	font-family: consolas, ubuntu;
-	font-size: 18pt;
+	font-size: 14pt;
 	word-wrap: break-word
 }
 

@@ -59,8 +59,8 @@ public class FieldVerifier {
 	
 	public static boolean folderNameCheck(String str) {
 		if(str == null || str.length() == 0)
-			return false;
-		String FOLDERNAME_REGEX = "^[a-zA-Z0-9\\s\\_\\.\\-\\+\\=]*$";
+			return false; 
+		String FOLDERNAME_REGEX = "^[a-zA-Z0-9\\s\\~\\!\\@\\#\\$\\%\\^\\&\\(\\)\\_\\-\\+\\=\\.]*$";
 		if(str.matches(FOLDERNAME_REGEX))
 			return true;
 		else 

@@ -2,10 +2,7 @@ package com.cloudwebapp.client.clouddrive;
 
 import com.cloudwebapp.client.service.GetUploadUrlClient;
 import com.cloudwebapp.client.service.GetUploadUrlClientAsync;
-import com.cloudwebapp.client.ui.CenterDisplay;
 import com.cloudwebapp.client.ui.MainWindow;
-import com.cloudwebapp.client.ui.basic.DrivePage;
-import com.cloudwebapp.shared.AccountDTO;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -16,7 +13,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FileUpload;
-import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -39,9 +35,11 @@ public class UploadFilePanel extends FormPanel {
 	private Button btnNewButton;
 	private Label lbl_filename;
 	
-	public UploadFilePanel() {	
+	public UploadFilePanel() {
+		setWidth("100%");	
 		VerticalPanel vPanel= new VerticalPanel();
 		this.setWidget(vPanel);
+		vPanel.setWidth("100%");
 		
 		fileUpload = new FileUpload();
 		vPanel.add(fileUpload);
@@ -65,13 +63,14 @@ public class UploadFilePanel extends FormPanel {
 		vPanel.add(hdnAuthor);
 		
 		hdnParent = new Hidden("Parent");
-		hdnParent.setValue(MainWindow.getFilePathStack().currentPathId().toString());
+		hdnParent.setValue(MainWindow.getFilePathStack().currentPath().folderId.toString());
 		vPanel.add(hdnParent);
 
 		lblMessage = new Label("");
 		vPanel.add(lblMessage);
 		
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
+		horizontalPanel.setStyleName("gwt-drivePage-uploadpanel");
 		vPanel.add(horizontalPanel);
 		horizontalPanel.setSize("100%", "100%");
 		
@@ -117,7 +116,7 @@ public class UploadFilePanel extends FormPanel {
 		btnNewButton.setText("Choose File");
 		btnNewButton.setStyleName("gwt-drivePage-button");
 		horizontalPanel.add(btnNewButton);
-		btnNewButton.setWidth("169px");
+		btnNewButton.setWidth("136px");
 		btnNewButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {

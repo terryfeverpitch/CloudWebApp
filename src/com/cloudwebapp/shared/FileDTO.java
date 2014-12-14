@@ -3,10 +3,12 @@ package com.cloudwebapp.shared;
 import java.io.Serializable;
 
 import com.cloudwebapp.server.File;
-import com.google.appengine.api.blobstore.BlobKey;
-
 
 public class FileDTO implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Long id;
 	private String author;
 	private Long parent;

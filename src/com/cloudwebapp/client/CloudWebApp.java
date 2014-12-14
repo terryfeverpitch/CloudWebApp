@@ -31,7 +31,6 @@ public class CloudWebApp implements EntryPoint {
 	private static DialogBox dialog;
 	private static LoginPage loginPage;
 	private SignupPage signPage; 
-//	private static HomePage homepage;
 	private static MainWindow mainWindow;
 	public static AccountServiceAsync accountService = GWT.create(AccountService.class);
 	public static FileManagerServiceAsync fileManager = GWT.create(FileManagerService.class);
@@ -93,7 +92,6 @@ public class CloudWebApp implements EntryPoint {
 							dialog.hide();
 							dialog = null;
 							mainWindow = new MainWindow(loginPage.tb_username.getText());
-//							mainWindow.build(loginPage.tb_username.getText());
 							RootPanel.get("mainView").add(mainWindow);
 						}
 						else if(result == Account.ACCOUNT_TYPE_ADMIN){
@@ -101,7 +99,6 @@ public class CloudWebApp implements EntryPoint {
 							dialog.hide();
 							dialog = null;
 							mainWindow = new MainWindow(loginPage.tb_username.getText());
-//							mainWindow.build(loginPage.tb_username.getText());
 							RootPanel.get("mainView").add(mainWindow);
 						}
 						else {

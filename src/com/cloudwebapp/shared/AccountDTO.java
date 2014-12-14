@@ -1,7 +1,6 @@
 package com.cloudwebapp.shared;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class AccountDTO implements Serializable {
 	/**
